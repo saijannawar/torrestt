@@ -1,0 +1,26 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-torrestt-dev-17a51-authRole",
+      "UnauthRoleArn": "arn:aws:iam::408250704204:role/amplify-torrestt-dev-17a51-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::408250704204:role/amplify-torrestt-dev-17a51-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-torrestt-dev-17a51-deployment",
+      "UnauthRoleName": "amplify-torrestt-dev-17a51-unauthRole",
+      "StackName": "amplify-torrestt-dev-17a51",
+      "StackId": "arn:aws:cloudformation:ap-south-1:408250704204:stack/amplify-torrestt-dev-17a51/0df29cc0-f475-11f0-aa94-06038fa2dde1",
+      "AmplifyAppId": "du88ki2qzmm8o"
+    },
+    "categories": {
+      "auth": {
+        "torrestt8098a32a": {
+          "googleClientId": "318968538339-be1id35i6hcom6gsl7o0atqmojkjsm4r.apps.googleusercontent.com"
+        },
+        "userPoolGroups": {}
+      },
+      "api": {
+        "torrestt": {}
+      }
+    }
+  }
+}

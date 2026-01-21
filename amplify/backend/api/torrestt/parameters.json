@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "torrestt",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authtorrestt8098a32a",
+      "Outputs.UserPoolId"
+    ]
+  }
+}

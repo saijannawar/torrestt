@@ -1,0 +1,129 @@
+# 1. Main Category (e.g. WordPress, 3D Assets)
+type Category @model @auth(rules: [
+  # Guests and Regular Users can only READ
+  { allow: public, operations: [read] },
+  { allow: private, operations: [read] },
+  # Only Admins can Create/Update/Delete Categories
+  { allow: groups, groups: ["admin"], operations: [create, read, update, delete] }
+]) {
+  id: ID!
+  name: String!
+  slug: String!
+  # A Category has many Subcategories
+  subCategories: [SubCategory] @hasMany(indexName: "byCategory", fields: ["id"])
+}
+
+# 2. Sub Category (e.g. Corporate, Creative, Low Poly)
+type SubCategory @model @auth(rules: [
+  { allow: public, operations: [read] },
+  { allow: private, operations: [read] },
+  { allow: groups, groups: ["admin"], operations: [create, read, update, delete] }
+]) {
+  id: ID!
+  name: String!
+  slug: String!
+  # Links back to Parent Category
+  categoryID: ID! @index(name: "byCategory")
+  category: Category @belongsTo(fields: ["categoryID"])
+  # A SubCategory has many Products
+  products: [Product] @hasMany(indexName: "bySubCategory", fields: ["id"])
+}
+
+# 3. Product (The actual Design/Theme being sold)
+type Product @model @auth(rules: [
+  { allow: public, operations: [read] },
+  { allow: private, operations: [read] },
+  # The "Owner" (Seller) can manage their OWN products
+  { allow: owner },
+  # Admins can manage ALL products
+  { allow: groups, groups: ["admin"], operations: [create, read, update, delete] }
+]) {
+  id: ID!
+  name: String!
+  description: String
+  price: Float
+  thumbnailUrl: String # Image of the design
+  fileUrl: String      # The actual Zip file
+  # Links back to SubCategory
+  subCategoryID: ID! @index(name: "bySubCategory")
+  subCategory: SubCategory @belongsTo(fields: ["subCategoryID"])
+}
+
+# 4. Prime Service (For the Main Nav)
+type PrimeService @model @auth(rules: [
+  { allow: public, operations: [read] },
+  { allow: private, operations: [read] },
+  # Only Admins can change the Menu
+  { allow: groups, groups: ["admin"], operations: [create, read, update, delete] }
+]) {
+  id: ID!
+  name: String!
+  url: String!
+  isActive: Boolean
+}
+
+# 5. Stock Photo Services
+type PhotoCategory @model @auth(rules: [
+  { allow: public, operations: [read] },
+  { allow: private, operations: [read] },
+  { allow: groups, groups: ["admin"], operations: [create, read, update, delete] }
+]) {
+  id: ID!
+  name: String!
+  slug: String!
+  description: String
+}
+
+# 6. Seller Profile (Linked to the User)
+type SellerProfile @model @auth(rules: [
+  # Owner can create and read their own profile
+  { allow: owner, operations: [create, read, update] },
+  # Public can read (so people can see shop info later)
+  { allow: public, operations: [read] },
+  # Admin can do EVERYTHING (Approve, Reject, Delete)
+  { allow: groups, groups: ["admin"], operations: [create, read, update, delete] }
+]) {
+  id: ID!
+  shopName: String!
+  description: String
+  website: String
+  # Status controls access: "PENDING", "APPROVED", "REJECTED"
+  status: String! @default(value: "PENDING")
+  owner: String
+}
+
+# ==========================================
+# 👇 NEW SECTIONS FOR BUNDLE STRATEGY 👇
+# ==========================================
+
+# 7. Photo Bundle (The "Pack" you sell for $15)
+type PhotoBundle @model @auth(rules: [
+  { allow: public, operations: [read] },
+  { allow: private, operations: [create, read, update, delete] }
+]) {
+  id: ID!
+  title: String!
+  description: String
+  bundlePrice: Float!      # The price for the whole pack
+  coverImage: String!      # The main thumbnail for the pack
+  zipUrl: String           # The download link for the full bundle (optional)
+  category: String         # e.g., "Business" (helps with filtering)
+  
+  # This connects the bundle to its individual photos
+  photos: [StockPhoto] @hasMany(indexName: "byBundle", fields: ["id"])
+}
+
+# 8. Single Stock Photo (The item you sell for $5 inside a bundle)
+type StockPhoto @model @auth(rules: [
+  { allow: public, operations: [read] },
+  { allow: private, operations: [create, read, update, delete] }
+]) {
+  id: ID!
+  title: String!
+  singlePrice: Float!      # The price if bought alone
+  url: String!             # The actual image link
+  
+  # This connects the photo back to its bundle
+  bundleID: ID! @index(name: "byBundle")
+  bundle: PhotoBundle @belongsTo(fields: ["bundleID"])
+}
