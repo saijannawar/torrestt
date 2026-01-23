@@ -1,0 +1,15 @@
+{
+  "resourceName": "s3dbcb9610",
+  "policyUUID": "dbcb9610",
+  "bucketName": "torresttbb7f9e5091d44ebaaba45eb6a752210a",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE"
+}

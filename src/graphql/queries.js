@@ -314,3 +314,125 @@ export const listSellerProfiles = /* GraphQL */ `
     }
   }
 `;
+export const getPhotoBundle = /* GraphQL */ `
+  query GetPhotoBundle($id: ID!) {
+    getPhotoBundle(id: $id) {
+      id
+      title
+      description
+      bundlePrice
+      coverImage
+      zipUrl
+      category
+      photos {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listPhotoBundles = /* GraphQL */ `
+  query ListPhotoBundles(
+    $filter: ModelPhotoBundleFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPhotoBundles(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        description
+        bundlePrice
+        coverImage
+        zipUrl
+        category
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getStockPhoto = /* GraphQL */ `
+  query GetStockPhoto($id: ID!) {
+    getStockPhoto(id: $id) {
+      id
+      title
+      singlePrice
+      url
+      bundleID
+      bundle {
+        id
+        title
+        description
+        bundlePrice
+        coverImage
+        zipUrl
+        category
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listStockPhotos = /* GraphQL */ `
+  query ListStockPhotos(
+    $filter: ModelStockPhotoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listStockPhotos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        singlePrice
+        url
+        bundleID
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const stockPhotosByBundleID = /* GraphQL */ `
+  query StockPhotosByBundleID(
+    $bundleID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelStockPhotoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    stockPhotosByBundleID(
+      bundleID: $bundleID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        singlePrice
+        url
+        bundleID
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;

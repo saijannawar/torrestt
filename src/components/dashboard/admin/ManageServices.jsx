@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { generateClient } from 'aws-amplify/api';
-import { createPrimeService, deletePrimeService } from '../../graphql/mutations'; // Check if this path needs to be ../graphql or ../../graphql depending on your folder depth
-import { listPrimeServices } from '../../graphql/queries';
+import { createPrimeService, deletePrimeService } from '../../../graphql/mutations'; // Check if this path needs to be ../graphql or ../../graphql depending on your folder depth
+import { listPrimeServices } from '../../../graphql/queries';
 import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css'; 
 import { Trash2, Link as LinkIcon, Menu, ArrowLeft } from 'lucide-react';

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { generateClient } from 'aws-amplify/api';
-import { listSellerProfiles } from '../../graphql/queries';
-import { updateSellerProfile } from '../../graphql/mutations';
+import { listSellerProfiles } from '../../../graphql/queries';
+import { updateSellerProfile } from '../../../graphql/mutations';
 import { Authenticator } from '@aws-amplify/ui-react';
 import { Check, X, User, Store } from 'lucide-react';
 

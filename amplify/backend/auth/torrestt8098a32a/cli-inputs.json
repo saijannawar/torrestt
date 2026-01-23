@@ -2,7 +2,7 @@
   "version": "1",
   "cognitoConfig": {
     "identityPoolName": "torrestt8098a32a_identitypool_8098a32a",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "torres8098a32a",
     "userPoolName": "torrestt8098a32a_userpool_8098a32a",
     "autoVerifiedAttributes": [

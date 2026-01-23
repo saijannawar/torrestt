@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { generateClient } from 'aws-amplify/api';
 // We use a custom query to get nested data (Category -> SubCategory)
-import { createCategory, deleteCategory, createSubCategory, deleteSubCategory } from '../../graphql/mutations';
+import { createCategory, deleteCategory, createSubCategory, deleteSubCategory } from '../../../graphql/mutations';
 import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css'; 
 import { Trash2, Plus, Folder, CornerDownRight, Layers } from 'lucide-react';

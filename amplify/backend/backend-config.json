@@ -85,5 +85,12 @@
         }
       ]
     }
+  },
+  "storage": {
+    "s3dbcb9610": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
+    }
   }
 }

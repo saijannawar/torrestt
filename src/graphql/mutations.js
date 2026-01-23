@@ -391,3 +391,159 @@ export const deleteSellerProfile = /* GraphQL */ `
     }
   }
 `;
+export const createPhotoBundle = /* GraphQL */ `
+  mutation CreatePhotoBundle(
+    $input: CreatePhotoBundleInput!
+    $condition: ModelPhotoBundleConditionInput
+  ) {
+    createPhotoBundle(input: $input, condition: $condition) {
+      id
+      title
+      description
+      bundlePrice
+      coverImage
+      zipUrl
+      category
+      photos {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updatePhotoBundle = /* GraphQL */ `
+  mutation UpdatePhotoBundle(
+    $input: UpdatePhotoBundleInput!
+    $condition: ModelPhotoBundleConditionInput
+  ) {
+    updatePhotoBundle(input: $input, condition: $condition) {
+      id
+      title
+      description
+      bundlePrice
+      coverImage
+      zipUrl
+      category
+      photos {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deletePhotoBundle = /* GraphQL */ `
+  mutation DeletePhotoBundle(
+    $input: DeletePhotoBundleInput!
+    $condition: ModelPhotoBundleConditionInput
+  ) {
+    deletePhotoBundle(input: $input, condition: $condition) {
+      id
+      title
+      description
+      bundlePrice
+      coverImage
+      zipUrl
+      category
+      photos {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createStockPhoto = /* GraphQL */ `
+  mutation CreateStockPhoto(
+    $input: CreateStockPhotoInput!
+    $condition: ModelStockPhotoConditionInput
+  ) {
+    createStockPhoto(input: $input, condition: $condition) {
+      id
+      title
+      singlePrice
+      url
+      bundleID
+      bundle {
+        id
+        title
+        description
+        bundlePrice
+        coverImage
+        zipUrl
+        category
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateStockPhoto = /* GraphQL */ `
+  mutation UpdateStockPhoto(
+    $input: UpdateStockPhotoInput!
+    $condition: ModelStockPhotoConditionInput
+  ) {
+    updateStockPhoto(input: $input, condition: $condition) {
+      id
+      title
+      singlePrice
+      url
+      bundleID
+      bundle {
+        id
+        title
+        description
+        bundlePrice
+        coverImage
+        zipUrl
+        category
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteStockPhoto = /* GraphQL */ `
+  mutation DeleteStockPhoto(
+    $input: DeleteStockPhotoInput!
+    $condition: ModelStockPhotoConditionInput
+  ) {
+    deleteStockPhoto(input: $input, condition: $condition) {
+      id
+      title
+      singlePrice
+      url
+      bundleID
+      bundle {
+        id
+        title
+        description
+        bundlePrice
+        coverImage
+        zipUrl
+        category
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;

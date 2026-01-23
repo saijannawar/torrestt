@@ -373,3 +373,153 @@ export const onDeleteSellerProfile = /* GraphQL */ `
     }
   }
 `;
+export const onCreatePhotoBundle = /* GraphQL */ `
+  subscription OnCreatePhotoBundle(
+    $filter: ModelSubscriptionPhotoBundleFilterInput
+  ) {
+    onCreatePhotoBundle(filter: $filter) {
+      id
+      title
+      description
+      bundlePrice
+      coverImage
+      zipUrl
+      category
+      photos {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdatePhotoBundle = /* GraphQL */ `
+  subscription OnUpdatePhotoBundle(
+    $filter: ModelSubscriptionPhotoBundleFilterInput
+  ) {
+    onUpdatePhotoBundle(filter: $filter) {
+      id
+      title
+      description
+      bundlePrice
+      coverImage
+      zipUrl
+      category
+      photos {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeletePhotoBundle = /* GraphQL */ `
+  subscription OnDeletePhotoBundle(
+    $filter: ModelSubscriptionPhotoBundleFilterInput
+  ) {
+    onDeletePhotoBundle(filter: $filter) {
+      id
+      title
+      description
+      bundlePrice
+      coverImage
+      zipUrl
+      category
+      photos {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateStockPhoto = /* GraphQL */ `
+  subscription OnCreateStockPhoto(
+    $filter: ModelSubscriptionStockPhotoFilterInput
+  ) {
+    onCreateStockPhoto(filter: $filter) {
+      id
+      title
+      singlePrice
+      url
+      bundleID
+      bundle {
+        id
+        title
+        description
+        bundlePrice
+        coverImage
+        zipUrl
+        category
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateStockPhoto = /* GraphQL */ `
+  subscription OnUpdateStockPhoto(
+    $filter: ModelSubscriptionStockPhotoFilterInput
+  ) {
+    onUpdateStockPhoto(filter: $filter) {
+      id
+      title
+      singlePrice
+      url
+      bundleID
+      bundle {
+        id
+        title
+        description
+        bundlePrice
+        coverImage
+        zipUrl
+        category
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteStockPhoto = /* GraphQL */ `
+  subscription OnDeleteStockPhoto(
+    $filter: ModelSubscriptionStockPhotoFilterInput
+  ) {
+    onDeleteStockPhoto(filter: $filter) {
+      id
+      title
+      singlePrice
+      url
+      bundleID
+      bundle {
+        id
+        title
+        description
+        bundlePrice
+        coverImage
+        zipUrl
+        category
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;

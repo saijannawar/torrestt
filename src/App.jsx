@@ -35,20 +35,28 @@ import Checkout from './components/cart/Checkout';
 import AuthWrapper from './components/auth/AuthWrapper';
 
 // --- Dashboard & Logic ---
-import DashboardLayout from './components/dashboard/DashboardLayout';
-import AdminOverview from './components/dashboard/AdminOverview';
-import SellerOverview from './components/dashboard/SellerOverview';
-import AddProduct from './components/dashboard/AddProduct';
-import SellerProducts from './components/dashboard/SellerProducts';
-import ManageCategories from './components/dashboard/ManageCategories';
-import ManageServices from './components/dashboard/ManageServices';
-import AdminSellers from './components/dashboard/AdminSellers'; // <--- NEW IMPORT
+// 1. Layout
+import DashboardLayout from './components/dashboard/layout/DashboardLayout';
+
+// 2. Admin Pages
+import AdminOverview from './components/dashboard/admin/AdminOverview';
+import AdminSellers from './components/dashboard/admin/AdminSellers';
+import ManageCategories from './components/dashboard/admin/ManageCategories';
+import ManageServices from './components/dashboard/admin/ManageServices';
+
+import AdminProducts from './components/dashboard/admin/AdminProducts';
+import AdminProductReview from './components/dashboard/admin/AdminProductReview';
+
+// 3. Seller Pages
+import SellerOverview from './components/dashboard/seller/SellerOverview';
+import SellerProducts from './components/dashboard/seller/SellerProducts';
+import AddProduct from './components/dashboard/seller/AddProduct';
+import SellerEarnings from './components/dashboard/seller/SellerEarnings';
+import SellerGuidelines from './components/dashboard/seller/SellerGuidelines';
+import SellerProfile from './components/dashboard/seller/SellerProfile';
+
+
 import SellerRoute from './components/SellerRoute'; // <--- NEW IMPORT
-
-import SellerEarnings from './components/dashboard/SellerEarnings';
-import SellerGuidelines from './components/dashboard/SellerGuidelines';
-import SellerProfile from './components/dashboard/SellerProfile';
-
 const HomePage = () => {
   return (
     <>
@@ -108,6 +116,9 @@ function App() {
               <Route path="categories" element={<ManageCategories />} />
               <Route path="services" element={<ManageServices />} />
               <Route path="sellers" element={<AdminSellers />} /> {/* <--- NEW ADMIN PAGE */}
+
+              <Route path="products" element={<AdminProducts />} />
+              <Route path="products/:id" element={<AdminProductReview />} />
             </Route>
 
             {/* --- PROTECTED SELLER ROUTES --- */}

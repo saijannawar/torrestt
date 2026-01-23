@@ -20,6 +20,9 @@
       },
       "api": {
         "torrestt": {}
+      },
+      "storage": {
+        "s3dbcb9610": {}
       }
     }
   }

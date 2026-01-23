@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { generateClient } from 'aws-amplify/api';
-import { listProducts } from '../../graphql/queries';
+import { listProducts } from '../../../graphql/queries';
 import { DollarSign, CheckCircle, Clock, FileText } from 'lucide-react';
 
 const client = generateClient();
