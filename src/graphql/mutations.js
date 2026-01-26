@@ -10,6 +10,8 @@ export const createCategory = /* GraphQL */ `
       id
       name
       slug
+      image
+      rank
       subCategories {
         nextToken
         __typename
@@ -29,6 +31,8 @@ export const updateCategory = /* GraphQL */ `
       id
       name
       slug
+      image
+      rank
       subCategories {
         nextToken
         __typename
@@ -48,6 +52,8 @@ export const deleteCategory = /* GraphQL */ `
       id
       name
       slug
+      image
+      rank
       subCategories {
         nextToken
         __typename
@@ -72,6 +78,8 @@ export const createSubCategory = /* GraphQL */ `
         id
         name
         slug
+        image
+        rank
         createdAt
         updatedAt
         __typename
@@ -100,6 +108,8 @@ export const updateSubCategory = /* GraphQL */ `
         id
         name
         slug
+        image
+        rank
         createdAt
         updatedAt
         __typename
@@ -128,6 +138,8 @@ export const deleteSubCategory = /* GraphQL */ `
         id
         name
         slug
+        image
+        rank
         createdAt
         updatedAt
         __typename
@@ -349,6 +361,16 @@ export const createSellerProfile = /* GraphQL */ `
       website
       status
       owner
+      sellerType
+      collegeName
+      collegeEmail
+      studentIdCardUrl
+      personalIdCardUrl
+      portfolioUrl
+      experienceYears
+      companyRegistrationNum
+      companyDocumentUrl
+      companyLinkedin
       createdAt
       updatedAt
       __typename
@@ -367,6 +389,16 @@ export const updateSellerProfile = /* GraphQL */ `
       website
       status
       owner
+      sellerType
+      collegeName
+      collegeEmail
+      studentIdCardUrl
+      personalIdCardUrl
+      portfolioUrl
+      experienceYears
+      companyRegistrationNum
+      companyDocumentUrl
+      companyLinkedin
       createdAt
       updatedAt
       __typename
@@ -385,6 +417,16 @@ export const deleteSellerProfile = /* GraphQL */ `
       website
       status
       owner
+      sellerType
+      collegeName
+      collegeEmail
+      studentIdCardUrl
+      personalIdCardUrl
+      portfolioUrl
+      experienceYears
+      companyRegistrationNum
+      companyDocumentUrl
+      companyLinkedin
       createdAt
       updatedAt
       __typename

@@ -7,6 +7,8 @@ type Category @model @auth(rules: [
   id: ID!
   name: String!
   slug: String!
+  image: String        # New field for cover image
+  rank: Int            # New field for custom ordering
   subCategories: [SubCategory] @hasMany(indexName: "byCategory", fields: ["id"])
 }
 
@@ -24,13 +26,11 @@ type SubCategory @model @auth(rules: [
   products: [Product] @hasMany(indexName: "bySubCategory", fields: ["id"])
 }
 
-# 3. Product (UPDATED FOR SELLER DASHBOARD)
+# 3. Product
 type Product @model @auth(rules: [
   { allow: public, operations: [read] },
   { allow: private, operations: [read] },
-  # Owner (Seller) can manage their own
   { allow: owner },
-  # Admin can do everything
   { allow: groups, groups: ["admin"], operations: [create, read, update, delete] }
 ]) {
   id: ID!
@@ -40,13 +40,12 @@ type Product @model @auth(rules: [
   thumbnailUrl: String
   fileUrl: String
 
-  # --- NEW FIELDS FOR SELLER DASHBOARD ---
+  # Seller Dashboard Fields
   status: String! @default(value: "PENDING") 
   adminFeedback: String
   techStack: String
   livePreviewUrl: String
 
-  # Links back to SubCategory
   subCategoryID: ID! @index(name: "bySubCategory")
   subCategory: SubCategory @belongsTo(fields: ["subCategoryID"])
 }
@@ -87,6 +86,23 @@ type SellerProfile @model @auth(rules: [
   website: String
   status: String! @default(value: "PENDING")
   owner: String
+  
+  sellerType: String!
+  
+  # Student Specific
+  collegeName: String
+  collegeEmail: String
+  studentIdCardUrl: String
+  
+  # Freelancer Specific
+  personalIdCardUrl: String
+  portfolioUrl: String
+  experienceYears: Int
+  
+  # Company Specific
+  companyRegistrationNum: String
+  companyDocumentUrl: String
+  companyLinkedin: String
 }
 
 # 7. Photo Bundle

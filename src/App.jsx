@@ -17,7 +17,7 @@ import ScrollToTop from './components/ScrollToTop';
 // --- Pages ---
 import BrowseCollection from './pages/BrowseCollection';
 import StockPhotos from './pages/StockPhotos';
-import BecomeSeller from './pages/BecomeSeller'; // <--- NEW IMPORT
+import BecomeSeller from './pages/BecomeSeller';
 
 // --- Components ---
 import HeroSection from './components/HeroSection';
@@ -35,19 +35,18 @@ import Checkout from './components/cart/Checkout';
 import AuthWrapper from './components/auth/AuthWrapper';
 
 // --- Dashboard & Logic ---
-// 1. Layout
 import DashboardLayout from './components/dashboard/layout/DashboardLayout';
 
-// 2. Admin Pages
+// Admin Pages
 import AdminOverview from './components/dashboard/admin/AdminOverview';
 import AdminSellers from './components/dashboard/admin/AdminSellers';
 import ManageCategories from './components/dashboard/admin/ManageCategories';
 import ManageServices from './components/dashboard/admin/ManageServices';
-
 import AdminProducts from './components/dashboard/admin/AdminProducts';
 import AdminProductReview from './components/dashboard/admin/AdminProductReview';
 
-// 3. Seller Pages
+// Seller Pages
+import SellerLayout from './components/dashboard/seller/SellerLayout';
 import SellerOverview from './components/dashboard/seller/SellerOverview';
 import SellerProducts from './components/dashboard/seller/SellerProducts';
 import AddProduct from './components/dashboard/seller/AddProduct';
@@ -55,8 +54,10 @@ import SellerEarnings from './components/dashboard/seller/SellerEarnings';
 import SellerGuidelines from './components/dashboard/seller/SellerGuidelines';
 import SellerProfile from './components/dashboard/seller/SellerProfile';
 
+// --- SECURITY GUARDS ---
+import ProtectedAdminRoute from './components/auth/ProtectedAdminRoute';
+import ProtectedSellerRoute from './components/auth/ProtectedSellerRoute';
 
-import SellerRoute from './components/SellerRoute'; // <--- NEW IMPORT
 const HomePage = () => {
   return (
     <>
@@ -107,39 +108,46 @@ function App() {
             <Route path="/product/:id" element={<MainLayout><ProductDetails /></MainLayout>} />
             <Route path="/checkout" element={<MainLayout><Checkout /></MainLayout>} />
 
-            {/* --- NEW: BECOME A SELLER PAGE --- */}
-            <Route path="/become-seller" element={<BecomeSeller />} />
+            {/* --- AUTH ROUTES --- */}
+            <Route path="/login" element={<AuthWrapper />} />
+            <Route path="/register" element={<AuthWrapper />} />
+            
+            {/* --- SELLER ONBOARDING (Public but requires Login) --- */}
+            <Route path="/become-seller" element={
+                <Authenticator>
+                    <BecomeSeller />
+                </Authenticator>
+            } />
 
-            {/* --- DASHBOARD ROUTES --- */}
-            <Route path="/admin" element={<DashboardLayout role="admin" />}>
+            {/* --- ADMIN DASHBOARD (Protected: Admin Group Only) --- */}
+            <Route path="/admin" element={
+                <ProtectedAdminRoute>
+                    <DashboardLayout role="admin" />
+                </ProtectedAdminRoute>
+            }>
               <Route path="dashboard" element={<AdminOverview />} />
               <Route path="categories" element={<ManageCategories />} />
               <Route path="services" element={<ManageServices />} />
-              <Route path="sellers" element={<AdminSellers />} /> {/* <--- NEW ADMIN PAGE */}
-
+              <Route path="sellers" element={<AdminSellers />} />
               <Route path="products" element={<AdminProducts />} />
               <Route path="products/:id" element={<AdminProductReview />} />
             </Route>
 
-            {/* --- PROTECTED SELLER ROUTES --- */}
+            {/* --- SELLER DASHBOARD (Protected: Approved Sellers Only) --- */}
+            {/* --- SELLER DASHBOARD (Protected: Approved Sellers Only) --- */}
             <Route path="/seller" element={
-              // Wrap in SellerRoute to block unapproved users
-              <SellerRoute>
-                <DashboardLayout role="seller" />
-              </SellerRoute>
+                <ProtectedSellerRoute>
+                    {/* UPDATED: Use the specific SellerLayout here */}
+                    <SellerLayout /> 
+                </ProtectedSellerRoute>
             }>
               <Route path="dashboard" element={<SellerOverview />} />
               <Route path="products" element={<SellerProducts />} />
               <Route path="products/add" element={<AddProduct />} />
-
               <Route path="earnings" element={<SellerEarnings />} />
               <Route path="guidelines" element={<SellerGuidelines />} />
               <Route path="profile" element={<SellerProfile />} />
             </Route>
-
-            {/* --- AUTH ROUTES --- */}
-            <Route path="/login" element={<AuthWrapper />} />
-            <Route path="/register" element={<AuthWrapper />} />
 
           </Routes>
         </Router>

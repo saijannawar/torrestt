@@ -7,6 +7,8 @@ export const getCategory = /* GraphQL */ `
       id
       name
       slug
+      image
+      rank
       subCategories {
         nextToken
         __typename
@@ -28,6 +30,8 @@ export const listCategories = /* GraphQL */ `
         id
         name
         slug
+        image
+        rank
         createdAt
         updatedAt
         __typename
@@ -48,6 +52,8 @@ export const getSubCategory = /* GraphQL */ `
         id
         name
         slug
+        image
+        rank
         createdAt
         updatedAt
         __typename
@@ -285,6 +291,16 @@ export const getSellerProfile = /* GraphQL */ `
       website
       status
       owner
+      sellerType
+      collegeName
+      collegeEmail
+      studentIdCardUrl
+      personalIdCardUrl
+      portfolioUrl
+      experienceYears
+      companyRegistrationNum
+      companyDocumentUrl
+      companyLinkedin
       createdAt
       updatedAt
       __typename
@@ -305,6 +321,16 @@ export const listSellerProfiles = /* GraphQL */ `
         website
         status
         owner
+        sellerType
+        collegeName
+        collegeEmail
+        studentIdCardUrl
+        personalIdCardUrl
+        portfolioUrl
+        experienceYears
+        companyRegistrationNum
+        companyDocumentUrl
+        companyLinkedin
         createdAt
         updatedAt
         __typename

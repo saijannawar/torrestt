@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { generateClient } from 'aws-amplify/api';
+import { getCurrentUser } from 'aws-amplify/auth'; 
 import { listProducts } from '../../../graphql/queries';
 import { deleteProduct } from '../../../graphql/mutations';
 import { Link } from 'react-router-dom';
 import { 
   Plus, Search, Edit2, Eye, AlertCircle, 
-  Trash2, X, CheckCircle, Clock 
+  Trash2, X, CheckCircle, Clock, Loader2 
 } from 'lucide-react';
 import { getUrl } from 'aws-amplify/storage';
 
@@ -14,18 +15,39 @@ const client = generateClient();
 const SellerProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [feedbackModal, setFeedbackModal] = useState(null); // Stores item for feedback modal
+  const [feedbackModal, setFeedbackModal] = useState(null); 
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => { fetchProducts(); }, []);
 
   async function fetchProducts() {
     try {
-      const result = await client.graphql({ query: listProducts, authMode: 'userPool' });
-      const items = result.data.listProducts.items;
+      // 1. Get Current User Info
+      const user = await getCurrentUser();
+      console.log("My User Details:", user);
+
+      // 2. NUCLEAR FIX: Fetch ALL products without a server filter
+      // The database allows 'Private' read access, so we get everything first.
+      const result = await client.graphql({ 
+        query: listProducts,
+        authMode: 'userPool',
+        fetchPolicy: 'network-only' // Force fresh data
+      });
+
+      const allItems = result.data.listProducts.items;
       
-      // Fetch Signed URLs for thumbnails
-      const itemsWithImages = await Promise.all(items.map(async (item) => {
+      // 3. MANUAL FILTER: Keep only products where Owner matches UserID OR Username
+      // This solves the "Email vs UUID" mismatch problem instantly.
+      const myItems = allItems.filter(item => 
+          item.owner === user.userId || 
+          item.owner === user.username ||
+          item.owner === user.signInDetails?.loginId
+      );
+
+      console.log("Filtered My Products:", myItems);
+
+      // 4. Get Images for only MY products
+      const itemsWithImages = await Promise.all(myItems.map(async (item) => {
         if (item.thumbnailUrl) {
            try {
              const url = await getUrl({ key: item.thumbnailUrl, options: { accessLevel: 'guest' } });
@@ -37,18 +59,22 @@ const SellerProducts = () => {
       
       // Sort by newest first
       setProducts(itemsWithImages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
-      setLoading(false);
-    } catch (err) { console.error(err); setLoading(false); }
+      
+    } catch (err) { 
+        console.error("Fetch Error:", err); 
+    } finally {
+        setLoading(false);
+    }
   }
 
-  // Filter Logic
+  // Search Filter
   const filteredProducts = products.filter(p => 
     p.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Delete Logic
   const handleDelete = async (id) => {
-    if(!window.confirm("Are you sure you want to delete this template? This cannot be undone.")) return;
+    if(!window.confirm("Are you sure you want to delete this product?")) return;
     try {
         await client.graphql({ 
             query: deleteProduct, 
@@ -56,7 +82,7 @@ const SellerProducts = () => {
             authMode: 'userPool'
         });
         setProducts(products.filter(p => p.id !== id));
-    } catch(err) { console.error(err); }
+    } catch(err) { console.error("Delete Error:", err); }
   }
 
   // Status Badge Component
@@ -78,13 +104,13 @@ const SellerProducts = () => {
     return (
         <span className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${styles[status] || "bg-gray-100 text-gray-600"}`}>
             {icons[status]}
-            {status.replace('_', ' ')}
+            {status ? status.replace('_', ' ') : 'PENDING'}
         </span>
     );
   };
 
   return (
-    <div className="max-w-7xl mx-auto pb-12">
+    <div className="max-w-7xl mx-auto pb-12 animate-in fade-in duration-500">
       
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
@@ -94,7 +120,7 @@ const SellerProducts = () => {
         </div>
         <Link 
             to="/seller/products/add" 
-            className="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
+            className="bg-black hover:bg-[#82B440] text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
         >
             <Plus size={20}/> Create New Template
         </Link>
@@ -107,7 +133,7 @@ const SellerProducts = () => {
             <input 
                 type="text" 
                 placeholder="Search templates..." 
-                className="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black/5 outline-none transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#82B440]/20 outline-none transition-all"
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
             />
@@ -121,7 +147,7 @@ const SellerProducts = () => {
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden min-h-[400px]">
         {loading ? (
             <div className="flex flex-col items-center justify-center h-64 text-gray-400">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mb-4"></div>
+                <Loader2 className="animate-spin mb-4 text-[#82B440]" size={32} />
                 <p>Loading your portfolio...</p>
             </div>
         ) : filteredProducts.length === 0 ? (
@@ -131,7 +157,7 @@ const SellerProducts = () => {
                 </div>
                 <h3 className="text-lg font-bold text-gray-900">No products found</h3>
                 <p className="text-gray-500 max-w-sm mt-2 mb-6">You haven't uploaded any templates yet, or no items match your search.</p>
-                <Link to="/seller/products/add" className="text-blue-600 font-bold hover:underline">Upload your first item</Link>
+                <Link to="/seller/products/add" className="text-[#82B440] font-bold hover:underline">Upload your first item</Link>
             </div>
         ) : (
             <>
@@ -170,7 +196,6 @@ const SellerProducts = () => {
                                     <td className="px-6 py-5">
                                         <div className="flex flex-col items-start gap-2">
                                             <StatusBadge status={item.status} />
-                                            {/* FEEDBACK LINK IF REJECTED */}
                                             {item.adminFeedback && (item.status === 'REJECTED' || item.status === 'CHANGES_REQUESTED') && (
                                                 <button 
                                                     onClick={() => setFeedbackModal(item)}
@@ -181,26 +206,21 @@ const SellerProducts = () => {
                                             )}
                                         </div>
                                     </td>
-                                    <td className="px-6 py-5 font-bold text-gray-900">${item.price}</td>
+                                    <td className="px-6 py-5 font-bold text-gray-900">₹{item.price}</td>
                                     <td className="px-6 py-5 text-gray-500">0</td> 
                                     <td className="px-6 py-5 text-right">
                                         <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            {/* Edit Button - Active if not Approved or if Rejected */}
                                             {item.status !== 'APPROVED' && (
                                                 <Link 
                                                     to={`/seller/products/edit/${item.id}`} 
-                                                    className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                                    title="Edit Template"
+                                                    className="p-2 text-gray-400 hover:text-[#82B440] hover:bg-green-50 rounded-lg transition-colors"
                                                 >
                                                     <Edit2 size={18} />
                                                 </Link>
                                             )}
-                                            
-                                            {/* Delete Button */}
                                             <button 
                                                 onClick={() => handleDelete(item.id)}
                                                 className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                title="Delete"
                                             >
                                                 <Trash2 size={18} />
                                             </button>
@@ -228,22 +248,9 @@ const SellerProducts = () => {
                                 </div>
                                 <StatusBadge status={item.status} />
                             </div>
-                            
-                            {item.adminFeedback && (item.status === 'REJECTED' || item.status === 'CHANGES_REQUESTED') && (
-                                <button 
-                                    onClick={() => setFeedbackModal(item)}
-                                    className="w-full mb-4 bg-red-50 border border-red-100 p-2 rounded-lg text-xs text-red-700 font-bold flex items-center justify-center gap-1"
-                                >
-                                    <AlertCircle size={12} /> View Admin Feedback
-                                </button>
-                            )}
-
                             <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                                <span className="font-bold text-gray-900">${item.price}</span>
+                                <span className="font-bold text-gray-900">₹{item.price}</span>
                                 <div className="flex gap-3">
-                                    {item.status !== 'APPROVED' && (
-                                        <Link to={`/seller/products/edit/${item.id}`} className="text-blue-600 font-bold text-sm flex items-center gap-1"><Edit2 size={14}/> Edit</Link>
-                                    )}
                                     <button onClick={() => handleDelete(item.id)} className="text-red-600 font-bold text-sm flex items-center gap-1"><Trash2 size={14}/> Delete</button>
                                 </div>
                             </div>
@@ -264,30 +271,20 @@ const SellerProducts = () => {
                     </div>
                     <div>
                         <h3 className="text-lg font-bold text-red-900">Action Required</h3>
-                        <p className="text-sm text-red-700 mt-1">
-                            The admin has requested changes for <strong>{feedbackModal.name}</strong>.
-                        </p>
+                        <p className="text-sm text-red-700 mt-1">Admin requested changes.</p>
                     </div>
                 </div>
                 <div className="p-6">
-                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Admin Feedback</h4>
                     <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 text-gray-700 text-sm leading-relaxed">
                         "{feedbackModal.adminFeedback}"
                     </div>
-                    
-                    <div className="mt-6 flex gap-3">
+                    <div className="mt-6">
                         <button 
                             onClick={() => setFeedbackModal(null)}
-                            className="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-lg transition-colors"
+                            className="w-full px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-lg transition-colors"
                         >
                             Close
                         </button>
-                        <Link 
-                            to={`/seller/products/edit/${feedbackModal.id}`}
-                            className="flex-1 px-4 py-3 bg-black hover:bg-gray-800 text-white font-bold rounded-lg transition-colors text-center"
-                        >
-                            Fix & Resubmit
-                        </Link>
                     </div>
                 </div>
             </div>
